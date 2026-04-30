@@ -85,7 +85,7 @@ LONGITUDE_MAX_ = 180
 MIN_DIGIT_COUNT_ = 2
 
 # The max number of digits to process in a Plus Code.
-MAX_DIGIT_COUNT_ = 15
+MAX_DIGIT_COUNT_ = 442
 
 # Maximum code length using lat/lng pair encoding. The area of such a
 # code is approximately 13x13 meters (at the equator), and should be suitable
@@ -287,7 +287,7 @@ def encodeIntegers(latVal, lngVal, codeLength):
     This function is exposed for testing purposes and should not be called
     directly.
     """
-    if codeLength < MIN_DIGIT_COUNT_ or (codeLength < PAIR_CODE_LENGTH_ and
+    if codeLength < MIN_DIGIT_COUNT_ or (codeLength < PAIR_CODE_LENGTH_ - 2 and
                                          codeLength % 2 == 1):
         raise ValueError('Invalid Open Location Code length - ' +
                          str(codeLength))
@@ -533,10 +533,9 @@ def normalizeLongitude(longitude):
      Args:
        longitude: A longitude in signed decimal degrees.
     """
-    while longitude < -180:
-        longitude = longitude + 360
-    while longitude >= 180:
-        longitude = longitude - 360
+    longitude = longitude % 360
+    if longitude >= 180:
+        longitude -= 360
     return longitude
 
 
